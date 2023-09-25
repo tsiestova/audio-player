@@ -46,13 +46,14 @@ fetchData(sliderMetaElement.getAttribute('data-blog-href'))
                 if (btnPlay.classList.contains('playing')) {
                     if (toggle.checked) {
                         audioObj[i].audio2.pause();
+                        audioObj[i].audio1.load();
                     } else {
                         audioObj[i].audio1.pause();
+                        audioObj[i].audio2.load();
                     }
                 } else {
                     if (toggle.checked) {
                         audioObj[i].audio2.play();
-                        console.log(audioObj[i], ' audioObj[i]');
 
                     } else {
                         audioObj[i].audio1.play();
@@ -69,16 +70,17 @@ fetchData(sliderMetaElement.getAttribute('data-blog-href'))
                 }
                 if (toggle.checked) {
                     audioObj[i].audio1.pause();
+                    audioObj[i].audio2.load();
                     const timeLine = audioObj[i].audio1.seek();
                     audioObj[i].audio2.seek(timeLine);
                     audioObj[i].audio2.play();
 
                 } else {
                     audioObj[i].audio2.pause();
+                    audioObj[i].audio1.load();
                     const timeLine = audioObj[i].audio2.seek();
                     audioObj[i].audio1.seek(timeLine);
                     audioObj[i].audio1.play();
-
                 }
             })
 

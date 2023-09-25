@@ -30,6 +30,5 @@ export function defineSectionSelector(attr:string, tag:string) {
  export function fetchData(path:string):Promise<unknown> {
      return fetch(`${document.location.origin}${path}?format=json-pretty`)
          .then((response) => response.json());
-
-     //return import('./response.json');
+    // return import('./response.json');
  }
