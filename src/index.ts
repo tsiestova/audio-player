@@ -1,5 +1,6 @@
 import {defineSectionSelector, fetchData} from "./utils";
 import {AudioListResponse, Item} from "./interfaces";
+const {Howl, Howler} = require('howler');
 import { Swiper } from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -51,6 +52,8 @@ fetchData(sliderMetaElement.getAttribute('data-blog-href'))
                 } else {
                     if (toggle.checked) {
                         audioObj[i].audio2.play();
+                        console.log(audioObj[i], ' audioObj[i]');
+
                     } else {
                         audioObj[i].audio1.play();
                     }
@@ -66,12 +69,16 @@ fetchData(sliderMetaElement.getAttribute('data-blog-href'))
                 }
                 if (toggle.checked) {
                     audioObj[i].audio1.pause();
-                    audioObj[i].audio2.currentTime = audioObj[i].audio1.currentTime;
+                    const timeLine = audioObj[i].audio1.seek();
+                    audioObj[i].audio2.seek(timeLine);
                     audioObj[i].audio2.play();
+
                 } else {
                     audioObj[i].audio2.pause();
-                    audioObj[i].audio1.currentTime = audioObj[i].audio2.currentTime;
+                    const timeLine = audioObj[i].audio2.seek();
+                    audioObj[i].audio1.seek(timeLine);
                     audioObj[i].audio1.play();
+
                 }
             })
 
@@ -126,7 +133,8 @@ fetchData(sliderMetaElement.getAttribute('data-blog-href'))
         });
     })
 
-const audioObj:{[key:string]:{audio1: HTMLAudioElement; audio2: HTMLAudioElement;}} = {};
+const audioObj:{[key:string]:{audio1: Howl; audio2: Howl}} = {};
+
 
 const buildSliderContent = (items:Item[]) => {
     const result = [];
@@ -139,6 +147,7 @@ const buildSliderContent = (items:Item[]) => {
         const div = document.createElement('div');
         div.innerHTML = items[i].body;
         const audioItems = div.querySelectorAll('[data-url]');
+
         const urls = Array.from(audioItems).map((item) => {
             return item.getAttribute('data-url');
         })
@@ -161,9 +170,15 @@ const buildSliderContent = (items:Item[]) => {
 </div>
 </div>`;
 
-        audioObj[i] = {audio1: new Audio(urls[0]), audio2: new Audio(urls[1])};
+        audioObj[i] = {audio1: new Howl({src: [urls[0]]}), audio2: new Howl({src: [urls[1]]})};
+
+        //audioObj[i] = {audio1: new Audio(urls[0]), audio2: new Audio(urls[1])};
+
         audioObj[i].audio1.load();
         audioObj[i].audio2.load();
+        console.log('LOADED');
+
+
         result.push(createItem);
     }
 
